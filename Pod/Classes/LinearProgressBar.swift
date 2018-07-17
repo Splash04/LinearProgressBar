@@ -24,6 +24,7 @@ open class LinearProgressBar: UIView {
     open var progressBarColor: UIColor = UIColor(red:0.12, green:0.53, blue:0.90, alpha:1.0)
     open var heightForLinearBar: CGFloat = 5
     open var widthForLinearBar: CGFloat = 0
+    open var animationDuration: TimeInterval = 0.5
     
     public init () {
         super.init(frame: CGRect(origin: CGPoint(x: 0,y :20), size: CGSize(width: screenSize.width, height: 0)))
@@ -60,33 +61,42 @@ open class LinearProgressBar: UIView {
     //MARK: PUBLIC FUNCTIONS    ------------------------------------------------------------------------------------------
     
     //Start the animation
-    open func startAnimation(){
-        
+    open func startAnimation(withDuration: TimeInterval? = nil) {
+        let duration: TimeInterval = withDuration ?? self.animationDuration
         self.configureColors()
         
         self.show()
         
         if !isAnimationRunning {
             self.isAnimationRunning = true
-            
-            UIView.animate(withDuration: 0.5, delay:0, options: [], animations: {
-                self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: self.heightForLinearBar)
+            if duration > 0 {
+                UIView.animate(withDuration: duration, delay:0, options: [], animations: {
+                    self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: self.heightForLinearBar)
                 }, completion: { animationFinished in
                     self.addSubview(self.progressBarIndicator)
                     self.configureAnimation()
-            })
+                })
+            } else {
+                self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: self.heightForLinearBar)
+                self.addSubview(self.progressBarIndicator)
+                self.configureAnimation()
+            }
         }
     }
     
     //Start the animation
-    open func stopAnimation() {
-        
+    open func stopAnimation(withDuration: TimeInterval? = nil) {
+        let duration: TimeInterval = withDuration ?? self.animationDuration
         self.isAnimationRunning = false
-        
-        UIView.animate(withDuration: 0.5, animations: {
+        if duration > 0 {
+            UIView.animate(withDuration: duration, animations: {
+                self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar, height: 0)
+                self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: 0)
+            })
+        } else {
             self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar, height: 0)
             self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: 0)
-        })
+        }
     }
     
     //MARK: PRIVATE FUNCTIONS    ------------------------------------------------------------------------------------------
@@ -105,7 +115,7 @@ open class LinearProgressBar: UIView {
         }
     }
     
-    fileprivate func configureColors(){
+    fileprivate func configureColors() {
         
         self.backgroundColor = self.backgroundProgressBarColor
         self.progressBarIndicator.backgroundColor = self.progressBarColor
