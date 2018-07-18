@@ -24,7 +24,8 @@ open class LinearProgressBar: UIView {
     open var progressBarColor: UIColor = UIColor(red:0.12, green:0.53, blue:0.90, alpha:1.0)
     open var heightForLinearBar: CGFloat = 5
     open var widthForLinearBar: CGFloat = 0
-    open var animationDuration: TimeInterval = 0.5
+    open var heightAnimationDuration: TimeInterval = 0.5
+    open var progressAnimationDuration: TimeInterval = 1.0
     
     public init () {
         super.init(frame: CGRect(origin: CGPoint(x: 0,y :20), size: CGSize(width: screenSize.width, height: 0)))
@@ -62,7 +63,7 @@ open class LinearProgressBar: UIView {
     
     //Start the animation
     open func startAnimation(withDuration: TimeInterval? = nil) {
-        let duration: TimeInterval = withDuration ?? self.animationDuration
+        let duration: TimeInterval = withDuration ?? self.heightAnimationDuration
         self.configureColors()
         
         self.show()
@@ -84,9 +85,9 @@ open class LinearProgressBar: UIView {
         }
     }
     
-    //Start the animation
+    //Stop the animation
     open func stopAnimation(withDuration: TimeInterval? = nil) {
-        let duration: TimeInterval = withDuration ?? self.animationDuration
+        let duration: TimeInterval = withDuration ?? self.heightAnimationDuration
         self.isAnimationRunning = false
         if duration > 0 {
             UIView.animate(withDuration: duration, animations: {
@@ -97,6 +98,10 @@ open class LinearProgressBar: UIView {
             self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar, height: 0)
             self.frame = CGRect(x: 0, y: self.frame.origin.y, width: self.widthForLinearBar, height: 0)
         }
+    }
+    
+    open func stopAnimationAfterCompletion() {
+        self.isAnimationRunning = false
     }
     
     //MARK: PRIVATE FUNCTIONS    ------------------------------------------------------------------------------------------
@@ -124,27 +129,30 @@ open class LinearProgressBar: UIView {
     
     fileprivate func configureAnimation() {
         
-        guard let superview = self.superview else {
+        guard let superviewWidth = self.superview?.frame.width else {
             stopAnimation()
             return
         }
-        
+
         self.progressBarIndicator.frame = CGRect(origin: CGPoint(x: 0, y :0), size: CGSize(width: 0, height: heightForLinearBar))
-        
-        UIView.animateKeyframes(withDuration: 1.0, delay: 0, options: [], animations: {
-            
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5, animations: {
-                self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: self.widthForLinearBar*0.7, height: self.heightForLinearBar)
+        let progressDuration = self.progressAnimationDuration
+        UIView.animateKeyframes(withDuration: progressDuration, delay: 0, options: [], animations: { [weak self] in
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: progressDuration / 2.0, animations: { [weak self] in
+                guard let _self = self else { return }
+                _self.progressBarIndicator.frame = CGRect(x: 0, y: 0, width: _self.widthForLinearBar * 0.7, height: _self.heightForLinearBar)
             })
             
-            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
-                self.progressBarIndicator.frame = CGRect(x: superview.frame.width, y: 0, width: 0, height: self.heightForLinearBar)
-                
+            UIView.addKeyframe(withRelativeStartTime: progressDuration / 2.0, relativeDuration: progressDuration / 2.0, animations: { [weak self] in
+                guard let _self = self else { return }
+                _self.progressBarIndicator.frame = CGRect(x: superviewWidth, y: 0, width: 0, height: _self.heightForLinearBar)
             })
             
-        }) { (completed) in
-            if (self.isAnimationRunning){
-                self.configureAnimation()
+        }) { [weak self] (completed) in
+            guard let _self = self else { return }
+            if (_self.isAnimationRunning) {
+                _self.configureAnimation()
+            } else if _self.progressBarIndicator.frame.size.height >= _self.heightForLinearBar {
+                _self.stopAnimation()
             }
         }
     }
