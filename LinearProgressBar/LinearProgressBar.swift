@@ -44,7 +44,6 @@ open class LinearProgressBar: UIView {
     //MARK: LIFE OF VIEW
     override open func layoutSubviews() {
         super.layoutSubviews()
-        self.screenSize = UIScreen.main.bounds
         
         if widthForLinearBar == 0 || widthForLinearBar == self.screenSize.height {
             widthForLinearBar = self.screenSize.width
@@ -162,10 +161,29 @@ open class LinearProgressBar: UIView {
     // -----------------------------------------------------
     
     fileprivate func getTopViewController() -> UIViewController? {
-        var topController: UIViewController? = UIApplication.shared.keyWindow?.rootViewController
+        var topController: UIViewController? = UIApplication.shared.firstKeyWindow?.rootViewController
         while topController?.presentedViewController != nil {
             topController = topController?.presentedViewController
         }
         return topController
+    }
+}
+
+fileprivate extension UIApplication {
+    
+    /// Returns the first key window across all connected scenes
+    var firstKeyWindow: UIWindow? {
+        if #available(iOS 15.0, *) {
+            return connectedScenes
+                .compactMap {
+                    ($0 as? UIWindowScene)?.keyWindow
+                }
+                .first
+            
+        } else {
+            return connectedScenes
+                .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+                .first { $0.isKeyWindow }
+        }
     }
 }
