@@ -7,6 +7,7 @@ s.homepage         = "https://github.com/PhilippeBoisney/LinearProgressBar"
 s.license          = 'MIT'
 s.author           = { "PhilippeBoisney" => "phil.boisney@gmail.com" }
 s.source           = { :git => "https://github.com/PhilippeBoisney/LinearProgressBar.git", :tag => s.version }
+s.resource_bundle  = {"LinearProgressBarMaterial.privacy"=>"Pod/PrivacyInfo.xcprivacy"}
 s.platform     = :ios, '8.0'
 s.requires_arc = true
 
