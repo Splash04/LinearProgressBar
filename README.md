@@ -27,6 +27,13 @@ target 'MyApp' do
 	pod 'LinearProgressBarMaterial'
 end
 ```
+
+#### [Swift Package Manager](https://developer.apple.com/documentation/xcode/adding-package-dependencies-to-your-app)
+
+```ruby
+https://github.com/Splash04/LinearProgressBar.git
+```
+
 ## USAGE
 ```swift
 //Simply, Call Progress Bar
@@ -56,7 +63,7 @@ linearBar.heightForLinearBar = 5
 - [x] Swift 4 support
 
 ## Version
-1.3
+1.4
 
 
 ## Author
