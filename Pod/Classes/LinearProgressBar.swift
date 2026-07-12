@@ -147,11 +147,14 @@ open class LinearProgressBar: UIView {
             })
             
         }) { [weak self] (completed) in
-            guard let _self = self else { return }
-            if (_self.isAnimationRunning) {
-                _self.configureAnimation()
-            } else if _self.progressBarIndicator.frame.size.height >= _self.heightForLinearBar {
-                _self.stopAnimation()
+            // UIView animation completion handlers are always invoked on the main thread.
+            MainActor.assumeIsolated {
+                guard let _self = self else { return }
+                if (_self.isAnimationRunning) {
+                    _self.configureAnimation()
+                } else if _self.progressBarIndicator.frame.size.height >= _self.heightForLinearBar {
+                    _self.stopAnimation()
+                }
             }
         }
     }

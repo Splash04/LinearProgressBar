@@ -1,0 +1,25 @@
+## macOS
+*.DS_Store
+
+# Xcode
+## Build generated
+build/
+DerivedData/
+
+## Various settings
+xcuserdata/
+
+## Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+
+# CocoaPods
+Pods/
+
+# Tools
+.cartographer/
+.serena/
