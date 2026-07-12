@@ -107,7 +107,7 @@ All init parameters: `isAnimating`, `style`, `barColor`, `trackColor`,
 
 ## iOS version behavior
 
-| | iOS 26+ | iOS 13–25 (UIKit) / 15–25 (SwiftUI) |
+| | iOS 26+ | iOS 13–18 (UIKit) / 15–18 (SwiftUI) |
 |---|---|---|
 | `.flat` | classic Material bar | classic Material bar |
 | `.liquidGlass` track | native glass (`UIGlassEffect` / `.glassEffect`) | frosted blur approximation |
