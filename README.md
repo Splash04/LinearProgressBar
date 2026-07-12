@@ -16,7 +16,7 @@ Both support the classic **flat** Material style and an [iOS 26 **Liquid Glass**
 
 Please feel free to make pull requests :)
 
-![alt tag](https://github.com/PhilippeBoisney/LinearProgressBar/raw/master/demo.gif)
+![Progress Bar Demo](Assets/progress_bar.gif)
 
 ## INSTALLATION
 #### Manually
@@ -124,9 +124,9 @@ All init parameters: `isAnimating`, `style`, `barColor`, `trackColor`,
 - [x] Swift 6 support (strict concurrency)
 
 ## Version
-1.4
-
+2.0
 
 ## Author
 
 Philippe BOISNEY (phil.boisney(@)gmail.com)
+IgorKha
